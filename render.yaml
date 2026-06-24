@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: worldcupwatchplace-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: TICKETMASTER_API_KEY
+        sync: false
+      - key: EVENTBRITE_TOKEN
+        sync: false
+      - key: EVENTBRITE_PUBLIC_SEARCH_ENABLED
+        value: "0"
+      - key: WORLD_CUP_DATA_URL
+        value: https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json

@@ -1,0 +1,50 @@
+[
+  {
+    "venueName": "Golden Gate Tap Room",
+    "city": "San Francisco",
+    "sources": ["reddit", "x"],
+    "mentionCount": 18,
+    "score": 17,
+    "summary": "Fan posts often mention it as a downtown sports-watch option."
+  },
+  {
+    "venueName": "Kezar Pub",
+    "city": "San Francisco",
+    "sources": ["reddit"],
+    "mentionCount": 22,
+    "score": 19,
+    "summary": "Recurring local soccer-watch recommendation in fan discussions."
+  },
+  {
+    "venueName": "The Willows",
+    "city": "San Francisco",
+    "sources": ["reddit", "facebook"],
+    "mentionCount": 9,
+    "score": 10,
+    "summary": "Some social mentions around sports nights and group viewing."
+  },
+  {
+    "venueName": "Stout NYC",
+    "city": "New York",
+    "sources": ["reddit", "facebook", "x"],
+    "mentionCount": 31,
+    "score": 22,
+    "summary": "Frequently appears in NYC watch-party and sports-bar discussions."
+  },
+  {
+    "venueName": "Carragher's",
+    "city": "New York",
+    "sources": ["reddit", "x"],
+    "mentionCount": 27,
+    "score": 21,
+    "summary": "Strong social signal for football fans and group match viewing."
+  },
+  {
+    "venueName": "Brickyard",
+    "city": "New York",
+    "sources": ["reddit", "facebook"],
+    "mentionCount": 14,
+    "score": 14,
+    "summary": "Mentioned as a reliable sports-bar style venue in Manhattan."
+  }
+]
