@@ -158,6 +158,86 @@ function sendJson(res, status, payload) {
   res.end(JSON.stringify(payload, null, 2));
 }
 
+function sendHtml(res, status, html) {
+  res.writeHead(status, {
+    "content-type": "text/html; charset=utf-8",
+    "access-control-allow-origin": "*"
+  });
+  res.end(html);
+}
+
+function pageShell(title, body) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${title}</title>
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #18231f; background: #f6f7f2; line-height: 1.55; }
+    main { max-width: 760px; margin: 0 auto; padding: 48px 20px 72px; }
+    h1 { margin: 0 0 12px; font-size: 34px; line-height: 1.1; }
+    h2 { margin-top: 32px; font-size: 20px; }
+    p, li { font-size: 16px; }
+    a { color: #0f8f72; }
+    .card { background: #fff; border: 1px solid #d9e0da; border-radius: 10px; padding: 24px; box-shadow: 0 10px 30px rgba(24, 35, 31, 0.08); }
+    .muted { color: #62706a; }
+  </style>
+</head>
+<body>
+  <main>${body}</main>
+</body>
+</html>`;
+}
+
+function privacyPolicyHtml() {
+  return pageShell("WorldCupWatchPlace Privacy Policy", `
+    <section class="card">
+      <h1>WorldCupWatchPlace Privacy Policy</h1>
+      <p class="muted">Last updated: June 24, 2026</p>
+      <p>WorldCupWatchPlace helps fans find public places to watch World Cup matches. This policy explains what data the Chrome extension and backend use.</p>
+
+      <h2>Information We Use</h2>
+      <ul>
+        <li><strong>Location:</strong> If you choose "Near me", the extension uses your approximate browser location to search nearby venues. You can also type any city or address manually.</li>
+        <li><strong>Local preferences:</strong> Watch list, selected match, filters, and saved location preferences are stored in your browser storage.</li>
+        <li><strong>Venue feedback:</strong> If you tap feedback such as "Right place", "Not showing", "Too crowded", or "Can reserve", the extension sends that venue-level signal to our backend.</li>
+      </ul>
+
+      <h2>How We Use Information</h2>
+      <ul>
+        <li>To recommend nearby venues and public viewing spots.</li>
+        <li>To calculate driving distance and match times in the selected location's time zone.</li>
+        <li>To improve venue confidence signals for other fans.</li>
+      </ul>
+
+      <h2>External Services</h2>
+      <p>The backend may use Google Maps/Places/Distance Matrix, Ticketmaster Discovery API, and optional event or social data sources to find venues and public event listings. API keys are stored on the backend, not in the Chrome extension package.</p>
+
+      <h2>What We Do Not Do</h2>
+      <ul>
+        <li>We do not sell personal data.</li>
+        <li>We do not collect private messages or payment information.</li>
+        <li>We do not use Reddit, X, or other social content for model training.</li>
+        <li>We do not display your precise location to other users.</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>For privacy questions, contact the project owner at <a href="mailto:li3166944467@gmail.com">li3166944467@gmail.com</a>.</p>
+    </section>
+  `);
+}
+
+function homeHtml() {
+  return pageShell("WorldCupWatchPlace API", `
+    <section class="card">
+      <h1>WorldCupWatchPlace API</h1>
+      <p>This backend powers the WorldCupWatchPlace Chrome extension.</p>
+      <p><a href="/api/health">API health</a> · <a href="/privacy">Privacy policy</a></p>
+    </section>
+  `);
+}
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let raw = "";
@@ -1271,6 +1351,14 @@ async function route(req, res) {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
   try {
+    if (url.pathname === "/" && req.method === "GET") {
+      return sendHtml(res, 200, homeHtml());
+    }
+
+    if (url.pathname === "/privacy" && req.method === "GET") {
+      return sendHtml(res, 200, privacyPolicyHtml());
+    }
+
     if (url.pathname === "/api/health") {
       return sendJson(res, 200, {
         ok: true,
