@@ -172,16 +172,27 @@ function pageShell(title, body) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find nearby bars, restaurants, and public screens to watch World Cup matches with other fans.">
   <title>${title}</title>
   <style>
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #18231f; background: #f6f7f2; line-height: 1.55; }
-    main { max-width: 760px; margin: 0 auto; padding: 48px 20px 72px; }
-    h1 { margin: 0 0 12px; font-size: 34px; line-height: 1.1; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #17211e; background: #f7f7f4; line-height: 1.55; }
+    main { max-width: 1060px; margin: 0 auto; padding: 48px 20px 72px; }
+    h1 { margin: 0 0 12px; font-size: clamp(34px, 7vw, 72px); line-height: 0.98; letter-spacing: 0; }
     h2 { margin-top: 32px; font-size: 20px; }
     p, li { font-size: 16px; }
     a { color: #0f8f72; }
-    .card { background: #fff; border: 1px solid #d9e0da; border-radius: 10px; padding: 24px; box-shadow: 0 10px 30px rgba(24, 35, 31, 0.08); }
+    .hero { min-height: 68vh; display: grid; align-content: center; gap: 28px; padding-bottom: 40px; }
+    .eyebrow { margin: 0 0 12px; color: #786013; font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 0.08em; }
+    .lead { max-width: 720px; margin: 0; font-size: 20px; color: #35433f; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid #0f8f72; background: #0f8f72; color: #fff; text-decoration: none; font-weight: 700; }
+    .button.secondary { background: transparent; color: #0f8f72; }
+    .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card { background: #fff; border: 1px solid #d9e0da; border-radius: 8px; padding: 22px; box-shadow: 0 10px 30px rgba(24, 35, 31, 0.08); }
+    .card h2 { margin-top: 0; }
     .muted { color: #62706a; }
+    code { background: #edf1ed; border-radius: 6px; padding: 2px 6px; }
   </style>
 </head>
 <body>
@@ -228,12 +239,49 @@ function privacyPolicyHtml() {
   `);
 }
 
-function homeHtml() {
+function oldHomeHtml() {
   return pageShell("WorldCupWatchPlace API", `
     <section class="card">
       <h1>WorldCupWatchPlace API</h1>
       <p>This backend powers the WorldCupWatchPlace Chrome extension.</p>
       <p><a href="/api/health">API health</a> · <a href="/privacy">Privacy policy</a></p>
+    </section>
+  `);
+}
+
+function homeHtml() {
+  return pageShell("WorldCupWatchPlace", `
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Chrome extension for World Cup watch plans</p>
+        <h1>WorldCupWatchPlace</h1>
+        <p class="lead">Find nearby bars, restaurants, and public screens where fans can watch World Cup matches together. Search by current location or any city, compare driving time, and call ahead when a venue still needs confirmation.</p>
+      </div>
+      <div class="actions">
+        <a class="button" href="https://chrome.google.com/webstore/detail/lfldfjappaoefoekgbpggldhhhjlaabd">Chrome Web Store</a>
+        <a class="button secondary" href="https://github.com/LXTTT0323/worldcupwatchplace">Open source</a>
+        <a class="button secondary" href="/privacy">Privacy policy</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Live venue data</h2>
+        <p>Uses real venue, route, rating, opening, reservation, and event-listing signals when available.</p>
+      </article>
+      <article class="card">
+        <h2>Fan-first filters</h2>
+        <p>Filter by sports bar, Chinese restaurant, Korean restaurant, izakaya, Italian restaurant, cafe, public screen, and more.</p>
+      </article>
+      <article class="card">
+        <h2>Clear confidence</h2>
+        <p>Separates confirmed event listings from likely watch spots that should be called before going.</p>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 18px;">
+      <h2>Developer links</h2>
+      <p><a href="/api/health">API health</a> | <a href="/api/matches">Match data</a> | <a href="/privacy">Privacy policy</a></p>
     </section>
   `);
 }
