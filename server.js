@@ -176,23 +176,74 @@ function pageShell(title, body) {
   <title>${title}</title>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #17211e; background: #f7f7f4; line-height: 1.55; }
-    main { max-width: 1060px; margin: 0 auto; padding: 48px 20px 72px; }
-    h1 { margin: 0 0 12px; font-size: clamp(34px, 7vw, 72px); line-height: 0.98; letter-spacing: 0; }
-    h2 { margin-top: 32px; font-size: 20px; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; color: #17211e; background: #f7f8fb; line-height: 1.55; }
+    main { max-width: 1120px; margin: 0 auto; padding: 0 20px 72px; }
+    h1 { margin: 0 0 14px; font-size: clamp(40px, 7vw, 76px); line-height: 0.98; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 28px; line-height: 1.1; }
+    h3 { margin: 0 0 8px; font-size: 18px; }
     p, li { font-size: 16px; }
-    a { color: #0f8f72; }
-    .hero { min-height: 68vh; display: grid; align-content: center; gap: 28px; padding-bottom: 40px; }
-    .eyebrow { margin: 0 0 12px; color: #786013; font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 0.08em; }
-    .lead { max-width: 720px; margin: 0; font-size: 20px; color: #35433f; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid #0f8f72; background: #0f8f72; color: #fff; text-decoration: none; font-weight: 700; }
-    .button.secondary { background: transparent; color: #0f8f72; }
+    a { color: #0b7f69; }
+    nav { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid #dfe5e2; }
+    nav .brand { font-weight: 800; color: #17211e; text-decoration: none; }
+    nav .links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    nav .links a { color: #40504a; text-decoration: none; font-size: 14px; font-weight: 650; }
+    section { padding: 44px 0; }
+    .hero { min-height: 74vh; display: grid; grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr); gap: 30px; align-items: center; }
+    .eyebrow { margin: 0 0 12px; color: #7b5b00; font-weight: 750; text-transform: uppercase; font-size: 13px; letter-spacing: 0.08em; }
+    .lead { max-width: 680px; margin: 0; font-size: 20px; color: #35433f; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid #0b7f69; background: #0b7f69; color: #fff; text-decoration: none; font-weight: 750; }
+    .button.secondary { background: #fff; color: #0b7f69; }
+    .note { margin-top: 14px; color: #66736e; font-size: 14px; }
     .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-    .card { background: #fff; border: 1px solid #d9e0da; border-radius: 8px; padding: 22px; box-shadow: 0 10px 30px rgba(24, 35, 31, 0.08); }
-    .card h2 { margin-top: 0; }
+    .card { background: #fff; border: 1px solid #d9e0da; border-radius: 8px; padding: 22px; box-shadow: 0 10px 28px rgba(24, 35, 31, 0.07); }
+    .card h2, .card h3 { margin-top: 0; }
+    .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .demo-shell { min-width: 0; overflow: hidden; background: #fff; border: 1px solid #d9e0da; border-radius: 10px; padding: 12px; box-shadow: 0 18px 46px rgba(23, 33, 30, 0.12); }
+    .demo-top { height: 38px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e6ebe8; padding: 0 6px 10px; color: #66736e; font-size: 13px; }
+    .dot { width: 10px; height: 10px; border-radius: 99px; background: #d24b45; box-shadow: 18px 0 #e6a500, 36px 0 #1b9b6c; }
+    .demo-grid { min-width: 0; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(226px, 0.88fr); gap: 10px; padding-top: 12px; }
+    .map-pane { min-height: 440px; min-width: 0; position: relative; overflow: hidden; border: 1px solid #e2e7e4; border-radius: 8px; background: linear-gradient(90deg, #e7ece9 1px, transparent 1px), linear-gradient(#e7ece9 1px, transparent 1px), #f9faf8; background-size: 54px 54px; }
+    .map-road { position: absolute; height: 12px; background: #d2d9d5; border-radius: 99px; transform: rotate(-18deg); }
+    .road-a { width: 82%; left: -8%; top: 38%; }
+    .road-b { width: 72%; right: -12%; top: 62%; transform: rotate(22deg); }
+    .road-c { width: 56%; left: 22%; top: 18%; transform: rotate(8deg); }
+    .pin { position: absolute; width: 130px; min-height: 64px; border: 1px solid #d9e0da; border-radius: 8px; background: #fff; padding: 10px; box-shadow: 0 8px 22px rgba(23, 33, 30, 0.13); animation: pulse 7s infinite; }
+    .pin strong { display: block; font-size: 13px; }
+    .pin span { display: block; color: #66736e; font-size: 12px; }
+    .pin.one { left: 8%; top: 20%; }
+    .pin.two { right: 8%; top: 32%; animation-delay: 1.3s; }
+    .pin.three { left: 31%; bottom: 14%; animation-delay: 2.6s; }
+    .search-card { position: absolute; left: 18px; top: 18px; right: 18px; border: 1px solid #d9e0da; border-radius: 8px; background: #fff; padding: 12px 14px; box-shadow: 0 8px 20px rgba(23, 33, 30, 0.1); }
+    .search-card b { display: block; }
+    .search-card span { color: #66736e; font-size: 13px; }
+    .panel { min-width: 0; border: 1px solid #d9e0da; border-radius: 8px; background: #fbfcfb; overflow: hidden; }
+    .panel-head { padding: 12px; color: #fff; background: #121820; border-bottom: 4px solid #0b7f69; }
+    .panel-head small { color: #c8d0cc; }
+    .panel-body { padding: 10px; display: grid; gap: 9px; }
+    .control-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip, .mini-button { border: 1px solid #d9e0da; background: #fff; border-radius: 999px; padding: 7px 9px; font-size: 12px; font-weight: 700; color: #40504a; }
+    .mini-button { border-radius: 8px; color: #0b7f69; }
+    .venue { min-width: 0; background: #fff; border: 1px solid #d9e0da; border-radius: 8px; padding: 10px; animation: slideVenue 7s infinite; }
+    .venue:nth-child(3) { animation-delay: 1.4s; }
+    .venue:nth-child(4) { animation-delay: 2.8s; }
+    .venue-top { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+    .score { white-space: nowrap; background: #0b7f69; color: #fff; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 800; }
+    .venue p { margin: 4px 0 0; color: #66736e; font-size: 13px; }
+    .bar { height: 8px; background: #e7ece9; border-radius: 99px; overflow: hidden; margin-top: 10px; }
+    .bar span { display: block; height: 100%; width: 92%; background: #0b7f69; border-radius: inherit; }
+    .steps { counter-reset: step; display: grid; gap: 12px; }
+    .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+    .step:before { counter-increment: step; content: counter(step); width: 34px; height: 34px; display: grid; place-items: center; border-radius: 99px; background: #e8f3ef; color: #0b7f69; font-weight: 800; }
+    .faq { display: grid; gap: 12px; }
+    .faq details { background: #fff; border: 1px solid #d9e0da; border-radius: 8px; padding: 16px 18px; }
+    .faq summary { cursor: pointer; font-weight: 750; }
+    footer { padding-top: 28px; border-top: 1px solid #dfe5e2; color: #66736e; font-size: 14px; }
     .muted { color: #62706a; }
     code { background: #edf1ed; border-radius: 6px; padding: 2px 6px; }
+    @keyframes pulse { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes slideVenue { 0%, 100% { transform: translateX(0); border-color: #d9e0da; } 45% { transform: translateX(-4px); border-color: #0b7f69; } }
+    @media (max-width: 900px) { .hero, .demo-grid, .split { grid-template-columns: 1fr; } .map-pane { min-height: 360px; } nav .links { display: none; } }
   </style>
 </head>
 <body>
@@ -239,50 +290,141 @@ function privacyPolicyHtml() {
   `);
 }
 
-function oldHomeHtml() {
-  return pageShell("WorldCupWatchPlace API", `
-    <section class="card">
-      <h1>WorldCupWatchPlace API</h1>
-      <p>This backend powers the WorldCupWatchPlace Chrome extension.</p>
-      <p><a href="/api/health">API health</a> · <a href="/privacy">Privacy policy</a></p>
-    </section>
-  `);
-}
-
 function homeHtml() {
   return pageShell("WorldCupWatchPlace", `
+    <nav>
+      <a class="brand" href="/">WorldCupWatchPlace</a>
+      <div class="links">
+        <a href="#demo">Demo</a>
+        <a href="#why">What it solves</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </nav>
+
     <section class="hero">
       <div>
-        <p class="eyebrow">Chrome extension for World Cup watch plans</p>
-        <h1>WorldCupWatchPlace</h1>
-        <p class="lead">Find nearby bars, restaurants, and public screens where fans can watch World Cup matches together. Search by current location or any city, compare driving time, and call ahead when a venue still needs confirmation.</p>
+        <p class="eyebrow">Free Chrome extension</p>
+        <h1>Find the right place to watch the World Cup.</h1>
+        <p class="lead">Search near you or any city. Compare sports bars, restaurants, public screens, driving time, match-time fit, and whether you should call before going.</p>
+        <div class="actions">
+          <a class="button" href="https://chromewebstore.google.com/detail/worldcupwatchplace/lfldfjappaoefoekgbpggldhhhjlaabd">Add to Chrome free</a>
+          <a class="button secondary" href="#demo">See it in action</a>
+        </div>
+        <p class="note">Independent fan tool. Not affiliated with FIFA or any official tournament organizer.</p>
       </div>
+
+      <div class="demo-shell" id="demo" aria-label="WorldCupWatchPlace product demo">
+        <div class="demo-top"><span class="dot"></span><span style="margin-left: 44px;">Google Maps + WorldCupWatchPlace side panel</span></div>
+        <div class="demo-grid">
+          <div class="map-pane">
+            <div class="search-card">
+              <b>Palo Alto, CA</b>
+              <span>World Cup watch places nearby</span>
+            </div>
+            <div class="map-road road-a"></div>
+            <div class="map-road road-b"></div>
+            <div class="map-road road-c"></div>
+            <div class="pin one"><strong>The Patio</strong><span>8 min drive</span></div>
+            <div class="pin two"><strong>Sports Page</strong><span>16 min drive</span></div>
+            <div class="pin three"><strong>Local Tap</strong><span>12 min drive</span></div>
+          </div>
+          <aside class="panel">
+            <div class="panel-head">
+              <strong>WorldCupWatchPlace</strong><br>
+              <small>Brazil vs Scotland | Today 3:00 PM</small>
+            </div>
+            <div class="panel-body">
+              <div class="control-row">
+                <span class="chip">Near me</span>
+                <span class="chip">Sports bar</span>
+                <span class="chip">Nearest</span>
+              </div>
+              <div class="venue">
+                <div class="venue-top"><strong>The Patio</strong><span class="score">98% fit</span></div>
+                <p>Sports-friendly, groups, website/reserve available.</p>
+                <div class="bar"><span></span></div>
+              </div>
+              <div class="venue">
+                <div class="venue-top"><strong>Sports Page</strong><span class="score">96% fit</span></div>
+                <p>Likely watch spot. Call to confirm this match.</p>
+                <div class="bar"><span style="width: 86%;"></span></div>
+              </div>
+              <div class="venue">
+                <div class="venue-top"><strong>Public Viewing</strong><span class="score">Event</span></div>
+                <p>Confirmed event listings appear above likely spots.</p>
+                <div class="bar"><span style="width: 76%; background:#b77900;"></span></div>
+              </div>
+              <div class="control-row">
+                <span class="mini-button">Map</span>
+                <span class="mini-button">Website/Reserve</span>
+                <span class="mini-button">Call</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <p class="eyebrow">What hurts?</p>
+      <h2>Finding a watch place should not take twenty group chats.</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>You need somewhere close.</h3>
+          <p>Sort by driving distance and time instead of guessing from search results.</p>
+        </article>
+        <article class="card">
+          <h3>You need the match on.</h3>
+          <p>The app separates confirmed event listings from likely sports-friendly venues.</p>
+        </article>
+        <article class="card">
+          <h3>You need the right vibe.</h3>
+          <p>Filter by sports bar, Chinese, Korean, izakaya, Italian, cafe, public screen, and more.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="how" class="split">
+      <div class="card">
+        <p class="eyebrow">How to use it</p>
+        <div class="steps">
+          <div class="step"><div><h3>Add it to Chrome</h3><p>Open the extension from the toolbar or side panel.</p></div></div>
+          <div class="step"><div><h3>Pick a place</h3><p>Use Near me or type any city, neighborhood, or address.</p></div></div>
+          <div class="step"><div><h3>Choose the match</h3><p>Match times update to the searched location's time zone.</p></div></div>
+          <div class="step"><div><h3>Go smarter</h3><p>Open Maps, call, or go to Website/Reserve before leaving.</p></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Data signals</p>
+        <h2>Real venue data first. Social proof when available.</h2>
+        <p>WorldCupWatchPlace uses venue, route, rating, opening, reservation, and event-listing signals. Fan mentions from sources such as Reddit or X can strengthen confidence only when they mention the venue and match-watching intent.</p>
+      </div>
+    </section>
+
+    <section id="faq">
+      <p class="eyebrow">Questions people ask</p>
+      <div class="faq">
+        <details open><summary>Is it free?</summary><p>Yes. The Chrome extension is free to install and use.</p></details>
+        <details><summary>Does it guarantee a venue is showing the match?</summary><p>No. Confirmed event listings are labeled when available. Likely watch spots should be called before you go.</p></details>
+        <details><summary>Does it sell my data?</summary><p>No. Location is used for venue search, and venue feedback is used to improve confidence signals. See the privacy policy for details.</p></details>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Find a better watch spot.</h2>
+      <p>Free for World Cup fans who want a place with screens, energy, and a plan.</p>
       <div class="actions">
-        <a class="button" href="https://chrome.google.com/webstore/detail/lfldfjappaoefoekgbpggldhhhjlaabd">Chrome Web Store</a>
+        <a class="button" href="https://chromewebstore.google.com/detail/worldcupwatchplace/lfldfjappaoefoekgbpggldhhhjlaabd">Add to Chrome free</a>
         <a class="button secondary" href="https://github.com/LXTTT0323/worldcupwatchplace">Open source</a>
-        <a class="button secondary" href="/privacy">Privacy policy</a>
       </div>
     </section>
 
-    <section class="grid">
-      <article class="card">
-        <h2>Live venue data</h2>
-        <p>Uses real venue, route, rating, opening, reservation, and event-listing signals when available.</p>
-      </article>
-      <article class="card">
-        <h2>Fan-first filters</h2>
-        <p>Filter by sports bar, Chinese restaurant, Korean restaurant, izakaya, Italian restaurant, cafe, public screen, and more.</p>
-      </article>
-      <article class="card">
-        <h2>Clear confidence</h2>
-        <p>Separates confirmed event listings from likely watch spots that should be called before going.</p>
-      </article>
-    </section>
-
-    <section class="card" style="margin-top: 18px;">
-      <h2>Developer links</h2>
-      <p><a href="/api/health">API health</a> | <a href="/api/matches">Match data</a> | <a href="/privacy">Privacy policy</a></p>
-    </section>
+    <footer>
+      <p>© 2026 WorldCupWatchPlace | <a href="/privacy">Privacy</a> | <a href="https://github.com/LXTTT0323/worldcupwatchplace">GitHub</a> | <a href="/api/health">API health</a></p>
+      <p>Independent tool. Not affiliated with, endorsed by, or sponsored by FIFA, the FIFA World Cup, or any official tournament platform.</p>
+    </footer>
   `);
 }
 
