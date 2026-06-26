@@ -1,4 +1,5 @@
 const http = require("node:http");
+const fsSync = require("node:fs");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { URL } = require("node:url");
@@ -16,6 +17,7 @@ const WORLD_CUP_DATA_URL = process.env.WORLD_CUP_DATA_URL || "https://raw.github
 const SIGNALS_PATH = path.join(__dirname, "data", "signals.json");
 const PLAN_EVENTS_PATH = path.join(__dirname, "data", "plan_events.json");
 const SOCIAL_SIGNALS_PATH = path.join(__dirname, "data", "social_signals.json");
+const ASSETS_DIR = path.join(__dirname, "assets");
 const USER_AGENT = "WorldCupWatchPlace/0.1 contact=local-prototype";
 
 const memoryCache = {
@@ -166,6 +168,52 @@ function sendHtml(res, status, html) {
   res.end(html);
 }
 
+async function sendAsset(req, res, assetName) {
+  const safeName = path.basename(assetName);
+  const ext = path.extname(safeName).toLowerCase();
+  const filePath = path.join(ASSETS_DIR, safeName);
+  const contentTypes = {
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png"
+  };
+  const contentType = contentTypes[ext] || "application/octet-stream";
+  const stat = await fs.stat(filePath);
+  const range = req.headers.range;
+
+  if ((ext === ".mp4" || ext === ".webm") && range) {
+    const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+    if (match) {
+      const start = match[1] ? Number(match[1]) : 0;
+      const end = match[2] ? Number(match[2]) : stat.size - 1;
+      const boundedEnd = Math.min(end, stat.size - 1);
+      if (start <= boundedEnd) {
+        res.writeHead(206, {
+          "content-type": contentType,
+          "content-length": boundedEnd - start + 1,
+          "content-range": `bytes ${start}-${boundedEnd}/${stat.size}`,
+          "accept-ranges": "bytes",
+          "cache-control": "public, max-age=31536000, immutable",
+          "access-control-allow-origin": "*"
+        });
+        return fsSync.createReadStream(filePath, { start, end: boundedEnd }).pipe(res);
+      }
+    }
+  }
+
+  const data = await fs.readFile(filePath);
+  res.writeHead(200, {
+    "content-type": contentType,
+    "content-length": data.length,
+    "accept-ranges": ext === ".mp4" || ext === ".webm" ? "bytes" : "none",
+    "cache-control": "public, max-age=31536000, immutable",
+    "access-control-allow-origin": "*"
+  });
+  res.end(data);
+}
+
 function pageShell(title, body) {
   return `<!doctype html>
 <html lang="en">
@@ -200,6 +248,7 @@ function pageShell(title, body) {
     .card h2, .card h3 { margin-top: 0; }
     .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
     .demo-shell { min-width: 0; overflow: hidden; background: #fff; border: 1px solid #d9e0da; border-radius: 10px; padding: 12px; box-shadow: 0 18px 46px rgba(23, 33, 30, 0.12); }
+    .demo-video { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid #e2e7e4; border-radius: 8px; background: #edf2f1; object-fit: cover; }
     .demo-top { height: 38px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e6ebe8; padding: 0 6px 10px; color: #66736e; font-size: 13px; }
     .dot { width: 10px; height: 10px; border-radius: 99px; background: #d24b45; box-shadow: 18px 0 #e6a500, 36px 0 #1b9b6c; }
     .demo-grid { min-width: 0; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(226px, 0.88fr); gap: 10px; padding-top: 12px; }
@@ -317,53 +366,11 @@ function homeHtml() {
 
       <div class="demo-shell" id="demo" aria-label="WorldCupWatchPlace product demo">
         <div class="demo-top"><span class="dot"></span><span style="margin-left: 44px;">Google Maps + WorldCupWatchPlace side panel</span></div>
-        <div class="demo-grid">
-          <div class="map-pane">
-            <div class="search-card">
-              <b>Palo Alto, CA</b>
-              <span>World Cup watch places nearby</span>
-            </div>
-            <div class="map-road road-a"></div>
-            <div class="map-road road-b"></div>
-            <div class="map-road road-c"></div>
-            <div class="pin one"><strong>The Patio</strong><span>8 min drive</span></div>
-            <div class="pin two"><strong>Sports Page</strong><span>16 min drive</span></div>
-            <div class="pin three"><strong>Local Tap</strong><span>12 min drive</span></div>
-          </div>
-          <aside class="panel">
-            <div class="panel-head">
-              <strong>WorldCupWatchPlace</strong><br>
-              <small>Brazil vs Scotland | Today 3:00 PM</small>
-            </div>
-            <div class="panel-body">
-              <div class="control-row">
-                <span class="chip">Near me</span>
-                <span class="chip">Sports bar</span>
-                <span class="chip">Nearest</span>
-              </div>
-              <div class="venue">
-                <div class="venue-top"><strong>The Patio</strong><span class="score">98% fit</span></div>
-                <p>Sports-friendly, groups, website/reserve available.</p>
-                <div class="bar"><span></span></div>
-              </div>
-              <div class="venue">
-                <div class="venue-top"><strong>Sports Page</strong><span class="score">96% fit</span></div>
-                <p>Likely watch spot. Call to confirm this match.</p>
-                <div class="bar"><span style="width: 86%;"></span></div>
-              </div>
-              <div class="venue">
-                <div class="venue-top"><strong>Public Viewing</strong><span class="score">Event</span></div>
-                <p>Confirmed event listings appear above likely spots.</p>
-                <div class="bar"><span style="width: 76%; background:#b77900;"></span></div>
-              </div>
-              <div class="control-row">
-                <span class="mini-button">Map</span>
-                <span class="mini-button">Website/Reserve</span>
-                <span class="mini-button">Call</span>
-              </div>
-            </div>
-          </aside>
-        </div>
+        <video class="demo-video" autoplay muted loop playsinline controls poster="/assets/worldcupwatchplace-demo-poster.jpg">
+          <source src="/assets/worldcupwatchplace-demo.webm" type="video/webm">
+          <source src="/assets/worldcupwatchplace-demo.mp4" type="video/mp4">
+          Your browser does not support the demo video.
+        </video>
       </div>
     </section>
 
@@ -1541,6 +1548,10 @@ async function route(req, res) {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
   try {
+    if (url.pathname.startsWith("/assets/") && req.method === "GET") {
+      return sendAsset(req, res, url.pathname.replace("/assets/", ""));
+    }
+
     if (url.pathname === "/" && req.method === "GET") {
       return sendHtml(res, 200, homeHtml());
     }
